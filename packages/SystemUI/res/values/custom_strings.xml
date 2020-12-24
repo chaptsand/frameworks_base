@@ -20,4 +20,7 @@
      <!-- Biometric Dialog - Use Face -->
     <string name="biometric_dialog_button_use_face">Use Face</string>
 
+    <!-- Data usage info -->
+    <string name="usage_data">used today</string>
+
 </resources>
