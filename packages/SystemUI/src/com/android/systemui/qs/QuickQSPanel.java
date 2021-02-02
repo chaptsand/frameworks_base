@@ -138,6 +138,12 @@ public class QuickQSPanel extends QSPanel {
         super.onDetachedFromWindow();
         Dependency.get(TunerService.class).removeTunable(mNumTiles);
     }
+    
+    @Override
+    public void setListening(boolean listening) {
+        super.setListening(listening);
+        setBrightnessListening(listening);
+    }
 
     @Override
     protected String getDumpableTag() {
