@@ -188,31 +188,30 @@ public class QSPanel extends LinearLayout implements Tunable, Callback, Brightne
         addViewsAboveTiles();
         mMovableContentStartIndex = getChildCount();
         mRegularTileLayout = createRegularTileLayout();
+        
+        mHorizontalLinearLayout = new RemeasuringLinearLayout(mContext);
+        mHorizontalLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
+        mHorizontalLinearLayout.setClipChildren(false);
+        mHorizontalLinearLayout.setClipToPadding(false);
+        
+        mHorizontalContentContainer = new RemeasuringLinearLayout(mContext);
+        mHorizontalContentContainer.setOrientation(LinearLayout.VERTICAL);
+        mHorizontalContentContainer.setClipChildren(false);
+        mHorizontalContentContainer.setClipToPadding(false);
+        
+        mHorizontalTileLayout = createHorizontalTileLayout();
+        LayoutParams lp = new LayoutParams(0, LayoutParams.WRAP_CONTENT, 1);
+        int marginSize = (int) mContext.getResources().getDimension(R.dimen.qqs_media_spacing);
+        lp.setMarginStart(0);
+        lp.setMarginEnd(marginSize);
+        lp.gravity = Gravity.CENTER_VERTICAL;
+        mHorizontalLinearLayout.addView(mHorizontalContentContainer, lp);
+        
+        lp = new LayoutParams(LayoutParams.MATCH_PARENT, 0, 1);
+        addView(mHorizontalLinearLayout, lp);
 
-        if (mUsingMediaPlayer) {
-            mHorizontalLinearLayout = new RemeasuringLinearLayout(mContext);
-            mHorizontalLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
-            mHorizontalLinearLayout.setClipChildren(false);
-            mHorizontalLinearLayout.setClipToPadding(false);
-
-            mHorizontalContentContainer = new RemeasuringLinearLayout(mContext);
-            mHorizontalContentContainer.setOrientation(LinearLayout.VERTICAL);
-            mHorizontalContentContainer.setClipChildren(false);
-            mHorizontalContentContainer.setClipToPadding(false);
-
-            mHorizontalTileLayout = createHorizontalTileLayout();
-            LayoutParams lp = new LayoutParams(0, LayoutParams.WRAP_CONTENT, 1);
-            int marginSize = (int) mContext.getResources().getDimension(R.dimen.qqs_media_spacing);
-            lp.setMarginStart(0);
-            lp.setMarginEnd(marginSize);
-            lp.gravity = Gravity.CENTER_VERTICAL;
-            mHorizontalLinearLayout.addView(mHorizontalContentContainer, lp);
-
-            lp = new LayoutParams(LayoutParams.MATCH_PARENT, 0, 1);
-            addView(mHorizontalLinearLayout, lp);
-
-            initMediaHostState();
-        }
+        initMediaHostState();
+        
         addSecurityFooter();
         addViewsBelowTiles();
         if (mRegularTileLayout instanceof PagedTileLayout) {
