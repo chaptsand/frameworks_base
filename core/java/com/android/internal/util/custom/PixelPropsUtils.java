@@ -31,6 +31,7 @@ public class PixelPropsUtils {
     private static final Map<String, Object> propsToChange;
     private static final Map<String, Object> propsToChangePixelXL;
     private static final Map<String, Object> propsToChangePixel3XL;
+    private static final Map<String, Object> propsToChangeMeizu;
 
     private static final String[] packagesToChange = {
             "com.android.vending",
@@ -65,6 +66,15 @@ public class PixelPropsUtils {
             "com.google.android.googlequicksearchbox"
     };
 
+    private static final String[] packagesToChangeMeizu = {
+            "com.kugou.android",
+            "cmccwm.mobilemusic",
+            "cn.kuwo.player",
+            "com.meizu.media.music",
+            "com.netease.cloudmusic",
+            "com.tencent.qqmusic"
+    };
+
     static {
         propsToChange = new HashMap<>();
         propsToChange.put("BRAND", "google");
@@ -87,6 +97,15 @@ public class PixelPropsUtils {
         propsToChangePixel3XL.put("PRODUCT", "crosshatch");
         propsToChangePixel3XL.put("MODEL", "Pixel 3 XL");
         propsToChangePixel3XL.put("FINGERPRINT", "google/crosshatch/crosshatch:11/RQ3A.210705.001/7380771:user/release-keys");
+        propsToChangeMeizu = new HashMap<>();
+        propsToChangeMeizu.put("BRAND", "meizu");
+        propsToChangeMeizu.put("MANUFACTURER", "meizu");
+        propsToChangeMeizu.put("DEVICE", "meizu17Pro");
+        propsToChangeMeizu.put("PRODUCT", "meizu_17Pro_N_CN");
+        propsToChangeMeizu.put("MODEL", "meizu 17 Pro");
+        propsToChangeMeizu.put("NAME", "M091Q");
+        propsToChangeMeizu.put("DISPLAY", "Flyme 9.21.5.17 daily");
+        propsToChangeMeizu.put("FINGERPRINT", "meizu/meizu_17Pro_N_CN/meizu17Pro:11/QKQ1.200127.002/1621248126:user/release-keys");
     }
 
     public static void setProps(String packageName) {
@@ -118,6 +137,16 @@ public class PixelPropsUtils {
                 Log.d(TAG, "Defining props for: " + packageName);
             }
             for (Map.Entry<String, Object> prop : propsToChangePixel3XL.entrySet()) {
+                String key = prop.getKey();
+                Object value = prop.getValue();
+                setPropValue(key, value);
+            }
+        }
+        if (Arrays.asList(packagesToChangeMeizu).contains(packageName)){
+            if (DEBUG){
+                Log.d(TAG, "Defining props for: " + packageName);
+            }
+            for (Map.Entry<String, Object> prop : propsToChangeMeizu.entrySet()) {
                 String key = prop.getKey();
                 Object value = prop.getValue();
                 setPropValue(key, value);
