@@ -30,13 +30,11 @@ import android.metrics.LogMaker;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.Settings;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.android.internal.logging.MetricsLogger;
@@ -79,10 +77,7 @@ import javax.inject.Named;
 public class QSPanel extends LinearLayout implements Tunable, Callback, BrightnessMirrorListener,
         Dumpable {
 
-    private static final String QS_SHOW_AUTO_BRIGHTNESS =
-            "customsecure:" + Settings.Secure.QS_SHOW_AUTO_BRIGHTNESS;
-    public static final String QS_SHOW_BRIGHTNESS_SLIDER =
-            "customsecure:" + Settings.Secure.QS_SHOW_BRIGHTNESS_SLIDER;
+    public static final String QS_SHOW_BRIGHTNESS = "qs_show_brightness";
     public static final String QS_SHOW_HEADER = "qs_show_header";
 
     private static final String TAG = "QSPanel";
@@ -100,7 +95,6 @@ public class QSPanel extends LinearLayout implements Tunable, Callback, Brightne
 
     @Nullable
     protected View mBrightnessView;
-    protected ImageView mAutoBrightnessView;
     @Nullable
     private BrightnessController mBrightnessController;
 
@@ -114,7 +108,6 @@ public class QSPanel extends LinearLayout implements Tunable, Callback, Brightne
 
     protected boolean mExpanded;
     protected boolean mListening;
-    private boolean mIsAutomaticBrightnessAvailable = false;
 
     private QSDetail.Callback mCallback;
     private final DumpManager mDumpManager;
@@ -236,12 +229,7 @@ public class QSPanel extends LinearLayout implements Tunable, Callback, Brightne
             R.layout.quick_settings_brightness_dialog, this, false);
         addView(mBrightnessView);
         mBrightnessController = new BrightnessController(getContext(),
-                findViewById(R.id.brightness_icon),
                 findViewById(R.id.brightness_slider), mBroadcastDispatcher);
-        mAutoBrightnessView = findViewById(R.id.brightness_icon);
-
-        mIsAutomaticBrightnessAvailable = getResources().getBoolean(
-                com.android.internal.R.bool.config_automatic_brightness_available);
     }
 
     protected QSTileLayout createRegularTileLayout() {
@@ -347,8 +335,7 @@ public class QSPanel extends LinearLayout implements Tunable, Callback, Brightne
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         final TunerService tunerService = Dependency.get(TunerService.class);
-        tunerService.addTunable(this, QS_SHOW_AUTO_BRIGHTNESS);
-        tunerService.addTunable(this, QS_SHOW_BRIGHTNESS_SLIDER);
+        tunerService.addTunable(this, QS_SHOW_BRIGHTNESS);
 
         if (mHost != null) {
             setTiles(mHost.getTiles());
@@ -390,9 +377,7 @@ public class QSPanel extends LinearLayout implements Tunable, Callback, Brightne
 
     @Override
     public void onTuningChanged(String key, String newValue) {
-        if (QS_SHOW_AUTO_BRIGHTNESS.equals(key) && mIsAutomaticBrightnessAvailable) {
-            updateViewVisibilityForTuningValue(mAutoBrightnessView, newValue);
-        } else if (QS_SHOW_BRIGHTNESS_SLIDER.equals(key) && mBrightnessView != null) {
+        if (QS_SHOW_BRIGHTNESS.equals(key) && mBrightnessView != null) {
             updateViewVisibilityForTuningValue(mBrightnessView, newValue);
         }
     }
